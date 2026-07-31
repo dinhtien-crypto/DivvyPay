@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DivvyPay</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <svg class="brand-mark" viewBox="0 0 120 120" role="img" aria-label="DivvyPay logo">
+            <rect class="logo-frame" x="8" y="8" width="104" height="104" rx="20" />
+            <rect class="logo-left" x="18" y="16" width="42" height="88" />
+            <path class="logo-right" d="M68 16H72C98.5 16 112 35.5 112 60C112 84.5 98.5 104 72 104H68V16Z" />
+            <path
+              class="logo-arrow-outline"
+              d="M45 52H72V39L101 60L72 81V68H45Z"
+            />
+            <path class="logo-arrow" d="M50 56H77V48L94 60L77 72V64H50Z" />
+          </svg>
+          <div>
+            <div class="brand-name">DivvyPay</div>
+            <div class="brand-sub">Stablecoin Payout Workspace</div>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-item active" data-view="dashboard">
+            <span>□</span>
+            Dashboard
+          </button>
+          <button class="nav-item" data-view="batch">
+            <span>↗</span>
+            Batch Payout
+          </button>
+          <button class="nav-item" data-view="split">
+            <span>◇</span>
+            Split Payout
+          </button>
+          <button class="nav-item" data-view="history">
+            <span>≡</span>
+            History
+          </button>
+        </nav>
+
+        <div class="roadmap-card">
+          <div class="eyebrow">Roadmap</div>
+          <p>One payout app, multiple access points: standalone DApp and wallet-ready module. Future modules include payment requests, token swaps, recurring payouts, and recipient templates.</p>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <div class="network-pill"><span></span> GIWA Sepolia · Chain ID 91342</div>
+            <h1 id="page-title">Payroll & Contributor Payouts</h1>
+          </div>
+          <div class="wallet-box">
+            <button class="ghost-btn" id="mint-usdc">Mint 10,000 MockUSDC</button>
+            <button class="ghost-btn" id="mint-krw">Mint 1,000,000 MockKRW</button>
+            <button class="ghost-btn hidden" id="disconnect-wallet">Disconnect</button>
+            <button class="connect-btn" id="connect-wallet">Connect MetaMask</button>
+          </div>
+        </header>
+
+        <section id="dashboard" class="view active">
+          <div class="hero-panel">
+            <div>
+              <div class="eyebrow">GIWA-native stablecoin payment workspace</div>
+              <h2>Batch payouts and revenue splits in one transaction.</h2>
+              <p>A wallet-ready stablecoin payout app on GIWA, starting with batch payments and proportional splits.</p>
+              <div class="hero-actions">
+                <button class="primary-btn" data-view-link="batch">Start Batch Payout</button>
+                <button class="secondary-btn" data-view-link="split">Create Split</button>
+              </div>
+            </div>
+            <div class="balance-card">
+              <div class="balance-top">
+                <span>Your balance</span>
+                <strong id="wallet-short">Not connected</strong>
+              </div>
+              <div class="balance-grid">
+                <div>
+                  <span>MockUSDC</span>
+                  <strong id="usdc-balance">0.00</strong>
+                </div>
+                <div>
+                  <span>MockKRW</span>
+                  <strong id="krw-balance">0</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <article class="metric-card">
+              <span>Total paid</span>
+              <strong id="metric-paid">$0.00</strong>
+            </article>
+            <article class="metric-card">
+              <span>Recipients paid</span>
+              <strong id="metric-recipients">0</strong>
+            </article>
+            <article class="metric-card">
+              <span>Last transaction</span>
+              <strong id="metric-last">No activity</strong>
+            </article>
+            <article class="metric-card">
+              <span>MVP scope</span>
+              <strong>Batch + Split</strong>
+            </article>
+          </div>
+
+          <div class="module-grid">
+            <article class="module-card">
+              <div class="icon-tile">↗</div>
+              <h3>Batch Payout</h3>
+              <p>Upload CSV or add recipients manually, then send MockKRW or MockUSDC in one contract call.</p>
+            </article>
+            <article class="module-card">
+              <div class="icon-tile">◇</div>
+              <h3>Split Payout</h3>
+              <p>Enter a total amount, assign percentage shares, and preview every recipient payout instantly.</p>
+            </article>
+            <article class="module-card disabled">
+              <div class="icon-tile">＋</div>
+              <div class="future-badge">Future</div>
+              <h3>Payment Requests</h3>
+              <p>Future links and QR codes for stablecoin collection across GIWA users and teams.</p>
+            </article>
+            <article class="module-card disabled">
+              <div class="icon-tile">⇄</div>
+              <div class="future-badge">Future</div>
+              <h3>Swap & Recurring</h3>
+              <p>Future KRWb/USDC swap and scheduled payouts for subscriptions and payroll cycles.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="batch" class="view">
+          <div class="content-grid">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <div class="eyebrow">Recipients</div>
+                  <h2>Batch list</h2>
+                </div>
+                <div class="button-row">
+                  <label class="upload-btn">
+                    Upload CSV
+                    <input id="csv-file" type="file" accept=".csv,text/csv" />
+                  </label>
+                  <button class="secondary-btn small" id="load-sample">Sample</button>
+                  <button class="secondary-btn small" id="add-row">Add row</button>
+                  <button class="danger-btn small" id="clear-batch">Clear</button>
+                </div>
+              </div>
+
+              <p class="helper">CSV columns: address, amount, label. Rows remain editable after parsing.</p>
+              <div class="textarea-wrap">
+                <textarea id="batch-input" spellcheck="false"></textarea>
+              </div>
+              <div id="batch-error" class="error-box hidden"></div>
+              <div class="table-card">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Line</th>
+                      <th>Recipient</th>
+                      <th>Label</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody id="batch-preview"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <aside class="panel preview-panel">
+              <div class="eyebrow">Preview</div>
+              <h2>Transaction</h2>
+              <label class="field-label">Token</label>
+              <select id="batch-token" class="select">
+                <option value="USDC">MockUSDC</option>
+                <option value="KRW">MockKRW</option>
+              </select>
+              <div class="summary-list">
+                <div><span>Recipients</span><strong id="batch-count">0</strong></div>
+                <div><span>Payout total</span><strong id="batch-total">0</strong></div>
+                <div><span>Approval required</span><strong id="batch-approval">0</strong></div>
+                <div><span>Available</span><strong id="batch-available">0</strong></div>
+                <div><span>Estimated call</span><strong>1 transaction</strong></div>
+              </div>
+              <button class="primary-btn full" id="send-batch">Approve MockUSDC</button>
+              <div class="status-line" id="batch-status">Ready</div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="split" class="view">
+          <div class="content-grid">
+            <article class="panel">
+              <div class="panel-head">
+                <div>
+                  <div class="eyebrow">Revenue split</div>
+                  <h2>Split payout</h2>
+                </div>
+                <button class="secondary-btn small" id="add-split-row">Add recipient</button>
+              </div>
+              <div class="form-row">
+                <label>
+                  Token
+                  <select id="split-token" class="select">
+                    <option value="KRW">MockKRW</option>
+                    <option value="USDC">MockUSDC</option>
+                  </select>
+                </label>
+                <label>
+                  Total amount
+                  <input id="split-total-input" type="number" min="0" value="1000000" />
+                </label>
+              </div>
+              <div id="split-rows" class="split-rows"></div>
+            </article>
+
+            <aside class="panel preview-panel">
+              <div class="eyebrow">Preview</div>
+              <h2>Distribution</h2>
+              <div class="summary-list">
+                <div><span>Recipients</span><strong id="split-count">0</strong></div>
+                <div><span>Ratio total</span><strong id="split-ratio">0%</strong></div>
+                <div><span>Payout total</span><strong id="split-total">0</strong></div>
+                <div><span>Estimated call</span><strong>1 transaction</strong></div>
+              </div>
+              <div id="split-preview" class="mini-list"></div>
+              <button class="primary-btn full" id="send-split">Confirm Split Payout</button>
+              <div class="status-line" id="split-status">Ratio must equal 100%</div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="history" class="view">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <div class="eyebrow">Local demo history</div>
+                <h2>Recent activity</h2>
+              </div>
+              <button class="secondary-btn small" id="clear-history">Clear history</button>
+            </div>
+            <div id="history-list" class="history-list"></div>
+          </article>
+        </section>
+      </main>
+      <div id="toast" class="toast hidden" role="status"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
+    <script src="./app.js?v=20260731-giwa-live-11"></script>
+  </body>
+</html>
