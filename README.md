@@ -118,6 +118,4 @@ Potential extensions include:
 - Support for future official KRW stablecoin infrastructure
 - Broader payment workflows for teams, companies, and contributors on GIWA
 
-## License
 
-MIT
